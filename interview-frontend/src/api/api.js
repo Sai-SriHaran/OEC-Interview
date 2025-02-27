@@ -1,4 +1,4 @@
-const api_url = "https://localhost:44343";
+const api_url = "http://localhost:10010";
 
 export const startPlan = async () => {
     const url = `${api_url}/Plan`;
@@ -82,6 +82,25 @@ export const addUserToProcedure = async (planId, procedureId, userIds) => {
 
     return true;
 };
+
+export const unassignUserFromPlanProcedure = async (planId, procedureId, userId) => {
+    const url = `${api_url}/Procedures/unassignUsersFromProcedure`;
+    var command = { planId: planId, procedureId: procedureId, userId: userId };
+
+    const response = await fetch(url, {
+        method: "DELETE",
+        headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify(command),
+    });
+
+    if (!response.ok) throw new Error("Failed to unassign user from procedure");
+
+    return true;
+};
+
 
 export const deleteUsersFromProcedure = async (planId, procedureId, userIds) => {
     const url = `${api_url}/Procedures/deleteUsersFromProcedure`;

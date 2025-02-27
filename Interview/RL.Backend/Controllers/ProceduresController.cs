@@ -34,17 +34,6 @@ public class ProceduresController : ControllerBase
     [HttpPost("addUserToProcedure")]
     public async Task<IActionResult> AddUserToProcedure(AddUserToProcedureCommand command, CancellationToken token)
     {
-        // Remove the exitsing users in the procedure and add the newly added
-        DeleteUsersFromProcedureCommand deleteCommand = new DeleteUsersFromProcedureCommand()
-        {
-            PlanId = command.PlanId,
-            ProcedureId = command.ProcedureId,
-            UserIds = command.UserIds,
-        };
-        var deleteResponse = await _mediator.Send(deleteCommand, token);
-        if (!deleteResponse.Succeeded)
-            return deleteResponse.ToActionResult();
-
         // Add the user to procedure
         var response = await _mediator.Send(command, token);
         return response.ToActionResult();
@@ -54,6 +43,14 @@ public class ProceduresController : ControllerBase
     public async Task<IActionResult> DeleteUsersFromProcedure(DeleteUsersFromProcedureCommand command, CancellationToken token)
     {
         // Delete all the users from the procedure
+        var response = await _mediator.Send(command, token);
+        return response.ToActionResult();
+    }
+
+    [HttpDelete("unassignUsersFromProcedure")]
+    public async Task<IActionResult> UnAssignUsersFromProcedure(UnAssignUserFromProcedureCommand command, CancellationToken token)
+    {
+        // Unassign the users from the procedure
         var response = await _mediator.Send(command, token);
         return response.ToActionResult();
     }
